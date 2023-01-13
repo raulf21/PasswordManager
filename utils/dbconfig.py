@@ -5,7 +5,7 @@ def dbconfig():
         db = mysql.connector.connect(
             host = 'localhost',
             user = 'root',
-            passwd = 'Dinges650!'
+            passwd = ''#password to your mysql
         )
         return db
     except Exception as e:
