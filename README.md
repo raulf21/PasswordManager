@@ -68,7 +68,8 @@ Make sure that the dependencies are installed and the dbconfig.py file is proper
 Handle the Master Password and Salt in a secure way.
 You can run the code by using the command ```python main.py -h``` for getting help on how to run the code
 
-Future Work
-Add more features such as editing entries.
-GUI implementation.
-Add more encryption options.
+### Future Work
+
+* Add more features such as editing entries.
+* GUI implementation.
+* Add more encryption options.
