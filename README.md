@@ -2,8 +2,9 @@
 This project provides a set of functions for storing and retrieving password entries in a database, as well as for encrypting and decrypting the passwords. The code uses the AES encryption algorithm, the PBKDF2 key derivation function, and the SHA-512 hash function. The project also includes a password generator, which creates a random password for the user. The code also includes a command-line interface for adding and retrieving password entries from the database.
 
 ### Dependencies
-pycryptodome library
-pyperclip library
+* pycryptodome library
+
+* pyperclip library
 
 ### Installations:
 
@@ -11,14 +12,14 @@ pyperclip library
 
 
 ### Database setup:
-Login as root user:
+* Login as root user:
 
 ```mysql -u root -p```
 
-Create user:
+* Create user:
 ```CREATE USER 'pm'@localhost IDENTIFIED BY 'password';```
 
-Granting Privilages:
+* Granting Privilages:
 ```GRANT ALL PRIVILEGES ON *.* TO 'pm'@localhost;```
 
 Run
