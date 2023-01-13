@@ -1,16 +1,16 @@
 # PasswordManager
 This project provides a set of functions for storing and retrieving password entries in a database, as well as for encrypting and decrypting the passwords. The code uses the AES encryption algorithm, the PBKDF2 key derivation function, and the SHA-512 hash function. The project also includes a password generator, which creates a random password for the user. The code also includes a command-line interface for adding and retrieving password entries from the database.
 
-###Dependencies
+### Dependencies
 pycryptodome library
 pyperclip library
 
-###Installations:
+### Installations:
 
 ```pip install -r requirements.txt```
 
 
-###Database setup:
+### Database setup:
 Login as root user:
 
 ```mysql -u root -p```
@@ -29,7 +29,7 @@ You first need need to configure the password manager by creating a MASTER passw
 
 
 
-###Usage
+### Usage
 
 ``` python main.py -h
 usage: main.py [-h] [-s NAME] [-u URL] [-e EMAIL] [-l LOGIN] [-c] option
