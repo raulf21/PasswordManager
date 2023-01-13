@@ -17,9 +17,13 @@ This project provides a set of functions for storing and retrieving password ent
 ```mysql -u root -p```
 
 * Create user:
+
+
 ```CREATE USER 'pm'@localhost IDENTIFIED BY 'password';```
 
 * Granting Privilages:
+
+
 ```GRANT ALL PRIVILEGES ON *.* TO 'pm'@localhost;```
 
 Run
@@ -54,7 +58,11 @@ Adding Entries:
 ``` python main.py add -s "website_name" -u "url_name" -e "email_enough" -l "username"```
 
 Getting passwords:
+
+
 ```python main.py retireve -s "website_name"```
+
+
 Note:substitute "-s" for any other of the options above.
 
 ### Notes
