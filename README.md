@@ -24,7 +24,7 @@ This project provides a set of functions for storing and retrieving password ent
 
     ```GRANT ALL PRIVILEGES ON *.* TO 'pm'@localhost;```
 
-Run
+### Run
 
 You first need need to configure the password manager by creating a MASTER password. Only needs to be done once.
 
