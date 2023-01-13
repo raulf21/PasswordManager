@@ -14,17 +14,15 @@ This project provides a set of functions for storing and retrieving password ent
 ### Database setup:
 * Login as root user:
 
-```mysql -u root -p```
+    ```mysql -u root -p```
 
 * Create user:
 
-
-```CREATE USER 'pm'@localhost IDENTIFIED BY 'password';```
+    ```CREATE USER 'pm'@localhost IDENTIFIED BY 'password';```
 
 * Granting Privilages:
 
-
-```GRANT ALL PRIVILEGES ON *.* TO 'pm'@localhost;```
+    ```GRANT ALL PRIVILEGES ON *.* TO 'pm'@localhost;```
 
 Run
 
