@@ -23,32 +23,57 @@ def config():
     print("Database 'pm' created")
 
     # Create tables
-    query = "CREATE TABLE pm.secret (masterkey_hash TEXT NOT NULL, device_secret TEXT NOT NULL)"
-    res = cursor.execute(query)
+    users_table = """CREATE TABLE pm.users(
+        id INT(11) AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL unique,
+        password_hash VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """
+    cursor.execute(users_table)
+
+    secrets_table = """CREATE TABLE pm.secret (
+        id INT(11) AUTO_INCREMENT PRIMARY KEY,
+        user_id INT(11) NOT NULL,
+        masterkey_hash VARCHAR(256) NOT NULL, 
+        device_secret TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES pm.users(id) ON DELETE CASCADE
+        );
+        """
+    cursor.execute(secrets_table)
     print("Table 'secrets' created")
 
-    query = "CREATE TABLE pm.entries (website TEXT NOT NULL,siteurl TEXT NOT NULL, email TEXT, username TEXT, password TEXT NOT NULL)"
-    res = cursor.execute(query)
+
+    otps_table = """CREATE TABLE pm.otp (
+        id INT(11) AUTO_INCREMENT PRIMARY KEY,
+        user_id INT(11) NOT NULL,
+        otp TEXT NOT NULL, 
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        expiration TIMESTAMP NOT NULL, 
+        used TINYINT(1) DEFAULT 0,
+        secret VARCHAR(255),
+        FOREIGN KEY (user_id) REFERENCES pm.users(id) ON DELETE CASCADE
+        );
+        """
+    cursor.execute(otps_table)
+    print("Table 'OTPS' created")
+
+    entries_table = """CREATE TABLE pm.entries (
+        id INT(11) AUTO_INCREMENT PRIMARY KEY,
+        user_id INT(11) NOT NULL,
+        website VARCHAR(255) NOT NULL,
+        siteurl VARCHAR(255) NOT NULL, 
+        email VARCHAR(255) NOT NULL, 
+        username VARCHAR(255) NOT NULL, 
+        password VARCHAR(255) NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES pm.users(id) ON DELETE CASCADE
+        );
+        """
+    cursor.execute(entries_table)
     print("Table 'entries' created")
 
-    while 1:
-        master = getpass("Choose a MASTER PASSWORD: ")
-        if master ==getpass("Re-type: ") and master !="":
-            break
-        print("Please Try Again.")
-    #hash the Master Password
 
-    hashed_mp = hashlib.sha256(master.encode()).hexdigest()
-    print("Generated hash of Master Program")
 
-    #Geneter a Device Secret
-    ds = generateDeviceSecret()
-    print("Device Secret generated")
-
-    #Add them to db
-    query="INSERT INTO pm.secret (masterkey_hash,device_secret) values (%s,%s)"
-    val = (hashed_mp, ds)
-    cursor.execute(query,val)
     db.commit()
 
     print("Added to database")

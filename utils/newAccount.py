@@ -12,18 +12,19 @@ def computeMasterKey(mp,ds):
     key = PBKDF2(password,salt, 32, count= 1000000, hmac_hash_module=SHA512)
     return key
 
-def createEntry(mp,ds,sitename, url, email,username):
-        password  = passwordgen.createPassword()
-        mk = computeMasterKey(mp,ds)
+def createEntry(mp,ds,user_id,sitename, url, email,username):
+    password  = passwordgen.createPassword()
+    mk = computeMasterKey(mp,ds)
 
-        encrypted = utils.aesutils.encrypt(key=mk,source=password,keyType="bytes")
+    encrypted = utils.aesutils.encrypt(key=mk,source=password,keyType="bytes")
 
-        db = dbconfig()
+    db = dbconfig()
 
-        cursor = db.cursor()
-        query = "INSERT INTO pm.entries (website,siteurl,email,username, password) values (%s,%s,%s,%s,%s)"
-        val = (sitename, url, email, username, encrypted)
-        cursor.execute(query,val)
-        db.commit()
+    cursor = db.cursor()
+    query = "INSERT INTO pm.entries (user_id,website,siteurl,email,username, password) values (%s,%s,%s,%s,%s,%s)"
+    val = (user_id,sitename, url, email, username, encrypted)
+    cursor.execute(query,val)
+    db.commit()
+    db.close()
 
-        print("Added Entry")
+    print("Added Entry")

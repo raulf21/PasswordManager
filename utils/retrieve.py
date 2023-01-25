@@ -13,35 +13,18 @@ def computeMasterKey(mp,ds):
     key = PBKDF2(password,salt, 32, count= 1000000, hmac_hash_module=SHA512)
     return key
 
-def retrieveEntries(mp,ds,search,decryptPassword = False):
+def retrieveEntries(mp,ds,user_id,search,decryptPassword = False):
     db = dbconfig()
     cursor = db.cursor()
 
-    query = ""
-
-    if len(search) == 0:
-        query = "SELECT * FROM pm.entries"
-
-    else:
-        query = "SELECT * FROM pm.entries WHERE "
-        for i in search:
-            query += f"{i} = '{search[i]}' AND "
-        query = query[:-5]
-
-    cursor.execute(query)
-    results = cursor.fetchall()
+    cursor.execute("SELECT password FROM pm.entries WHERE website= %s AND user_id= %s", (search,user_id))
+    results = cursor.fetchone()
+    db.close()
     if len(results) == 0:
         print("No Results for the search. Sorry")
-    if (decryptPassword and len(results)>1) or (not decryptPassword):
-        for i in results:
-            print(i[0,i[1], i[2], i[3], i[3]])
-        return 
 
     if len(results)==1 and decryptPassword:
         mk = computeMasterKey(mp,ds)
-        decrypted = utils.aesutils.decrypt(key=mk, source=results[0][4],keyType="bytes")
+        decrypted = utils.aesutils.decrypt(key=mk, source=results[0],keyType="bytes")
 
         print("Password copied to clipboard")
-        pyperclip.copy(decrypted.decode())
-
-    db.close()
