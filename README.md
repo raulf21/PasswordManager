@@ -1,5 +1,5 @@
 # PasswordManager
-This project provides a set of functions for storing and retrieving password entries in a database, as well as for encrypting and decrypting the passwords. The code uses the AES encryption algorithm, the PBKDF2 key derivation function, and the SHA-512 hash function. The project also includes a password generator, which creates a random password for the user. The code also includes a command-line interface for adding and retrieving password entries from the database.
+This project provides a set of functions for storing and retrieving password entries in a database, as well as for encrypting and decrypting the passwords. The code uses the AES encryption algorithm, the SHA-256 hash function, and the pyperclip library for copying the password to the clipboard. The project also includes a password generator, a command-line interface for adding and retrieving password entries from the database and two-factor authentication.
 
 ### Dependencies
 * pycryptodome library
@@ -34,42 +34,23 @@ You first need need to configure the password manager by creating a MASTER passw
 
 ### Usage
 
-``` python main.py -h
-usage: main.py [-h] [-s NAME] [-u URL] [-e EMAIL] [-l LOGIN] [-c] option
-Description:
-positional arguments:
-  option                (a)dd / (r)etrieve /
+``` 
+When running the main.py file, you will be prompted to either sign in or create an account. Once you have signed in or created an account, you will have the option to add an account or retrieve a password.
 
-options:
-  -h, --help            show this help message and exit
-  -s NAME, --name NAME  Website name
-  -u URL, --url URL     website url
-  -e EMAIL, --email EMAIL
-                        Email
-  -l LOGIN, --login LOGIN
-                        Username
-  -c, --copy            Copy passoword to clipboard. 
+When adding an account, you will be prompted to enter the website name, website URL, email, and username. Password is generated for you automatically.
+
+When retrieving a password, you will be prompted to enter the website name. Password will be copied to clipboard.
   ```
   
-Adding Entries:
-
-``` python main.py add -s "website_name" -u "url_name" -e "email_enough" -l "username"```
-
-Getting passwords:
-
-
-```python main.py retireve -s "website_name"```
-
-
-Note:substitute "-s" for any other of the options above.
 
 ### Notes
 Make sure that the dependencies are installed and the dbconfig.py file is properly configured with the database connection details before running the code.
 Handle the Master Password and Salt in a secure way.
-You can run the code by using the command ```python main.py -h``` for getting help on how to run the code
 
 ### Future Work
 
-* Add more features such as editing entries.
-* GUI implementation.
-* Add more encryption options.
+* Add a feature for editing existing password entries in the database
+* Implement a feature that alerts the user if their password has been compromised in a data breach.
+* Implement a GUI for the project to make it more user-friendly.
+* Add a feature for password recovery in case the user forgets their master password.
+
