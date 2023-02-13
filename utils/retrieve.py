@@ -1,3 +1,4 @@
+from unittest import result
 import utils.aesutils
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Hash import SHA512
@@ -16,7 +17,6 @@ def computeMasterKey(mp,ds):
 def retrieveEntries(mp,ds,user_id,search,decryptPassword = False):
     db = dbconfig()
     cursor = db.cursor()
-
     cursor.execute("SELECT password FROM pm.entries WHERE website= %s AND user_id= %s", (search,user_id))
     results = cursor.fetchone()
     db.close()
@@ -28,3 +28,4 @@ def retrieveEntries(mp,ds,user_id,search,decryptPassword = False):
         decrypted = utils.aesutils.decrypt(key=mk, source=results[0],keyType="bytes")
 
         print("Password copied to clipboard")
+        pyperclip.copy(decrypted.decode())
