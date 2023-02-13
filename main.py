@@ -5,6 +5,7 @@ from utils.aesutils import decrypt
 import utils.otp
 import utils.accounts
 from utils.two_factor import sendemail
+import utils.update_password
 
 import utils.newAccount
 import utils.retrieve
@@ -46,6 +47,8 @@ def main():
         print("What would you like to do?")
         print("1. Add an account")
         print("2. Retrieve Password: ")
+        print("3. Update Password")
+        print("4. Delete Account")
 
         choice = input("Please enter your choice. ")
         if choice == '1':
@@ -58,5 +61,10 @@ def main():
             if res is not None:
                 search = input("Please enter the website you need the password for: ")
                 utils.retrieve.retrieveEntries(res[0],res[1],user_id,search,decryptPassword =True)
+        elif choice == '3':
+            res = inputAndValidateMasterPassword(user_id)
+            if res is not None:
+                search = input("Please enter the website you need the password updated: ")
+                utils.update_password.update(res[0],res[1],user_id,search)
                 
 main()

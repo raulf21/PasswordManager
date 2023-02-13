@@ -72,8 +72,6 @@ def config():
     cursor.execute(entries_table)
     print("Table 'entries' created")
 
-
-
     db.commit()
 
     print("Added to database")
