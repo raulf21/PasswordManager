@@ -35,12 +35,23 @@ You first need need to configure the password manager by creating a MASTER passw
 ### Usage
 
 ``` 
-When running the main.py file, you will be prompted to either sign in or create an account. Once you have signed in or created an account, you will have the option to add an account or retrieve a password.
+When running the main.py file, you will be prompted to either sign in or create an account. 
+```
+Once you have signed in or created an account, you will have the option to:
+```
+1. Add an Account
+2. Retrieve Password
+3. Update Password
+```
+```
+When adding an account, you will be prompted to enter the website name, website URL, email, and username. 
+Password is generated for you automatically.
 
-When adding an account, you will be prompted to enter the website name, website URL, email, and username. Password is generated for you automatically.
+When retrieving a password, you will be prompted to enter the website name. 
+Password will be copied to clipboard.
 
-When retrieving a password, you will be prompted to enter the website name. Password will be copied to clipboard.
-  ```
+When updating a password, you will be prompted to enter masterpassword and website name. Password will be generated automatically.
+```
   
 
 ### Notes
@@ -49,7 +60,6 @@ Handle the Master Password and Salt in a secure way.
 
 ### Future Work
 
-* Add a feature for editing existing password entries in the database
 * Implement a feature that alerts the user if their password has been compromised in a data breach.
 * Implement a GUI for the project to make it more user-friendly.
 * Add a feature for password recovery in case the user forgets their master password.
