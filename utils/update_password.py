@@ -17,11 +17,17 @@ def update(mp,ds,user_id,search):
 
     new_password = passwordgen.createPassword()
     encrypted = utils.aesutils.encrypt(key=mk,source=new_password,keyType="bytes")
-    db = dbconfig()
-    cursor = db.cursor()
-    query = "UPDATE pm.entries SET password = %s WHERE website= %s AND user_id= %s"
-    cursor.execute(query,(encrypted,search,user_id))
-    db.commit()
+    try:
+        with dbconfig() as db:
+            cursor = db.cursor()
+            query = "UPDATE pm.entries SET password = %s WHERE website= %s AND user_id= %s"
+            cursor.execute(query,(encrypted,search,user_id))
+            db.commit()
+    except Exception as e:
+        print("Error executing query: ",e)
+        db.rollback()
+        db.close()
+        return
     print("Password updated")
     db.close()
 

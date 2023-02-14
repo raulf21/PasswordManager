@@ -21,16 +21,16 @@ from utils.dbconfig import dbconfig
 def inputAndValidateMasterPassword(user_id):
     mp = getpass("Master Password: ")
     hashed_mp = hashlib.sha256(mp.encode()).hexdigest()
-
     db = dbconfig()
-    cursor = db.cursor()
-
-    cursor.execute("SELECT * FROM pm.secret WHERE id= %s", (user_id,))
-    result = cursor.fetchone()
-    if hashed_mp != result[2]:
-        print("WRONG !!")
-        return None
-    return [mp,result[3]]
+    with db as conn:
+        cursor = conn.cursor()
+        query = "SELECT * FROM pm.secret WHERE id= %s"
+        cursor.execute(query,(user_id,))
+        result = cursor.fetchone()
+        if hashed_mp != result[2]:
+            print("WRONG !!")
+            return None
+        return [mp,result[3]]
 
 def main():
     print("1. Sign in.")
@@ -44,12 +44,14 @@ def main():
         user_id = utils.accounts.signup()
     else:
         print("Invalid Option")
+        return
     while user_id:
         print("What would you like to do?")
         print("1. Add an account")
         print("2. Retrieve Password: ")
         print("3. Update Password")
         print("4. Check for breaches")
+        print("5. Exit Program")
 
         choice = input("Please enter your choice. ")
         if choice == '1':
@@ -79,11 +81,18 @@ def main():
                         print("Would you like to update these?")
                         change = input("Enter yes or no")
                         if change == 'yes':
-                            utils.update_password.update(res[0],res[1],user_id,website[0])
+                            for website in breached_websites:
+                                utils.update_password.update(res[0],res[1],user_id,website[0])
                             print("All breached passwords have been updated.")
-                        else:
-                            break
                 else:
                     print("No breaches have been found.")
+
+        elif choice == '5':
+            print("Exiting the program...")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+    else:
+        print("Error: Could not log in or create Account.")
 
 main()
