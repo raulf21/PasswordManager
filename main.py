@@ -6,6 +6,7 @@ import utils.otp
 import utils.accounts
 from utils.two_factor import sendemail
 import utils.update_password
+import utils.breaches
 
 import utils.newAccount
 import utils.retrieve
@@ -48,7 +49,7 @@ def main():
         print("1. Add an account")
         print("2. Retrieve Password: ")
         print("3. Update Password")
-        print("4. Delete Account")
+        print("4. Check for breaches")
 
         choice = input("Please enter your choice. ")
         if choice == '1':
@@ -66,5 +67,23 @@ def main():
             if res is not None:
                 search = input("Please enter the website you need the password updated: ")
                 utils.update_password.update(res[0],res[1],user_id,search)
-                
+        elif choice == '4':
+            res = inputAndValidateMasterPassword(user_id)
+            if res is not None:
+                unchecked = utils.breaches.get_passwords(user_id)
+                breached_websites = utils.breaches.check_all_passwords(unchecked,res[0],res[1])
+                if len(breached_websites) > 0:
+                    print("The following websites have been breached:")
+                    for website in breached_websites:
+                        print("-",website)
+                        print("Would you like to update these?")
+                        change = input("Enter yes or no")
+                        if change == 'yes':
+                            utils.update_password.update(res[0],res[1],user_id,website[0])
+                            print("All breached passwords have been updated.")
+                        else:
+                            break
+                else:
+                    print("No breaches have been found.")
+
 main()

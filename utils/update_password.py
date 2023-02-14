@@ -16,7 +16,6 @@ def update(mp,ds,user_id,search):
     mk = computeMasterKey(mp,ds)
 
     new_password = passwordgen.createPassword()
-    print(new_password)
     encrypted = utils.aesutils.encrypt(key=mk,source=new_password,keyType="bytes")
     db = dbconfig()
     cursor = db.cursor()
