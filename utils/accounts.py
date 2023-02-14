@@ -20,12 +20,18 @@ def generateDeviceSecret(length=10):
 def sign_in():
     email = input("Email: ")
     password = getpass("Password: ")
-    
-    db = dbconfig()
+
+    try:
+        db = dbconfig()
+    except Exception as e:
+        print("Unable to connect to the database. Please Try again later.")
+        return None
     cursor = db.cursor()
 
     # Retrieve the user's hashed password from the database
-    cursor.execute("SELECT id, password_hash FROM pm.users WHERE email = %s", (email,))
+    query = "SELECT id, password_hash FROM pm.users WHERE email = %s"
+    vals =  (email,)
+    cursor.execute(query,vals)
 
     result = cursor.fetchone()
 
@@ -57,36 +63,38 @@ def signup():
        hashpw()-combines the password and salt   
     '''
     hashed_password = bcrypt.hashpw(password,bcrypt.gensalt())
-    db = dbconfig()
-    cursor = db.cursor()
-
     # Insert the new user into the database
-    cursor.execute("INSERT INTO pm.users (email,password_hash) VALUES (%s,%s)",(email,hashed_password))
+    with dbconfig() as db:
+        cursor = db.cursor()
 
-    cursor.execute("SELECT id FROM pm.users WHERE email= %s", (email,))
-    result = cursor.fetchone()
+        query = "INSERT INTO pm.users (email,password_hash) VALUES (%s,%s)"
+        vals = (email,hashed_password)
+        cursor.execute(query,vals)
 
-    print("To finish creating your account we need a password only you will remember.")
-    while 1:
-        master = getpass("Choose a MASTER PASSWORD: ")
-        if master == getpass("Re-type: ") and master !="":
-            break
-        print("Please Try Again.")
+        query = "SELECT id FROM pm.users WHERE email= %s"
+        vals = (email,)
+        result = cursor.fetchone()
 
-    #hash the Master Password
-    hashed_mp = hashlib.sha256(master.encode()).hexdigest()
-    print("Generated hash of Master Program")
+        print("To finish creating your account we need a password only you will remember.")
+        while 1:
+            master = getpass("Choose a MASTER PASSWORD: ")
+            if master == getpass("Re-type: ") and master !="":
+                break
+            print("Please Try Again.")
 
-    #Generate a Device Secret
-    ds = generateDeviceSecret()
-    print("Device Secret generated")
+        #hash the Master Password
+        hashed_mp = hashlib.sha256(master.encode()).hexdigest()
+        print("Generated hash of Master Program")
 
-    #Add them to db
-    query="INSERT INTO pm.secret (user_id,masterkey_hash,device_secret) values (%s,%s,%s)"
-    val = (result[0],hashed_mp, ds)
-    cursor.execute(query,val)
+        #Generate a Device Secret
+        ds = generateDeviceSecret()
+        print("Device Secret generated")
 
-    db.commit()
-    print("Account created!")
-    db.close()
+        #Add them to db
+        query="INSERT INTO pm.secret (user_id,masterkey_hash,device_secret) values (%s,%s,%s)"
+        val = (result[0],hashed_mp, ds)
+        cursor.execute(query,val)
+
+        db.commit()
+        print("Account created!")
     return result[0]

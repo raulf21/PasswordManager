@@ -12,13 +12,19 @@ def computeMasterKey(mp,ds):
     return key
 
 def get_passwords(user_id):
-    db = dbconfig()
-    cursor = db.cursor()
+    try:
+        with dbconfig() as db:
+            cursor = db.cursor()
+            query = "SELECT website,password FROM pm.entries WHERE user_id = %s"
+            cursor.execute(query,(user_id,))
+            result = cursor.fetchall()
+    except Exception as e:
+        print("Error retrieving passwords ",e)
+        db.rollback()
+        db.close()
+        return 
+    db.close()
 
-    query = "SELECT website,password FROM pm.entries WHERE user_id = %s"
-    cursor.execute(query,(user_id,))
-
-    result = cursor.fetchall()
     passwords = [(row[0],row[1]) for row in result]
 
     return passwords
@@ -39,9 +45,7 @@ def check_password_breach(password,mk):
     sha1 = hashlib.sha1(decrypted_password.encode()).hexdigest().upper()
     response = requests.get(f'https://api.pwnedpasswords.com/range/{sha1[:5]}')
 
-    if sha1[5:].upper() in response.text:
-        return True
-    return False
+    return sha1[5:].upper() in response.text
 def check_all_passwords(passwords,mp,ds):
     """
     Parameters:
